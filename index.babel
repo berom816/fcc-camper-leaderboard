@@ -1,0 +1,181 @@
+//display heading
+function getHeader(){
+  return(
+    <div className='headBar'>freeCodeCamp</div>
+  )
+}
+
+//make panel containing ranking, user name, points in last month, and all time points
+function Panels(props){
+  return(
+    <tr className='panel'>
+      <td>{props.index+1}</td>
+      <td>
+        <a href={'https://www.freecodecamp.com/'+props.userName} target='_blank'>
+          <img className='imageStyle' src={props.picture} alt='User Profile Picture'/>
+        </a>
+        <a href={'https://www.freecodecamp.com/'+props.userName} target='_blank'>
+          {props.userName}
+        </a>
+      </td>
+      <td className="points">{props.recentPoint}</td>
+      <td className='points'>{props.allPoint}</td>
+    </tr>
+  )
+}
+
+//component to create the title of the table, with sortable effect on month point and all time points
+class TableTitle extends React.Component{
+  constructor(){
+    super();
+    this.state={
+      //by default show rank of users by recent month points
+      onRecent:true
+    };
+    this.changeList = this.changeList.bind(this);
+    this.renderRecent = this.renderRecent.bind(this);
+    this.renderAllTime = this.renderAllTime.bind(this);
+  }
+  
+  //change the list between recent and all time
+  changeList(){
+    if(this.state.onRecent){
+      this.props.getAllTimePoints();
+      this.setState({
+        onRecent:false
+      });
+    }
+    else{
+      this.props.getRecPoints();
+      this.setState({
+        onRecent:true
+      });
+    }
+  }
+  
+  renderRecent(){
+    return(
+      <tr className='panel'>
+        <th width='10%'>#</th>
+        <th width='40%'>Camper Name</th>
+        <th width='25%' className='pointsTitle'>Points in past 30 days&#9660;</th>
+        <th width='25%' className='pointsTitle' onClick={this.changeList}>All time points</th>
+      </tr>
+    )
+  }
+  
+  renderAllTime(){
+    return(  
+        <tr className='panel'>
+          <th width='10%'>#</th>
+          <th width='40%'>Camper Name</th>
+          <th className='pointsTitle' width='25%' onClick={this.changeList}>Points in past 30 days</th>
+          <th className='pointsTitle' width='25%'>All time points&#9660;</th>
+        </tr>
+    )
+  }
+  
+  render(){
+    if(this.state.onRecent){
+      return this.renderRecent();
+    }
+    else{
+      return this.renderAllTime();
+    }
+  }
+}
+
+//assemles the table, holds the api call results
+class Table extends React.Component{
+  constructor(){
+    super();
+    this.state = {
+      pointsArr:[]
+    }
+    this.getRecentPoint = this.getRecentPoint.bind(this);
+    this.getAllPoints = this.getAllPoints.bind(this);
+    this.makeTable = this.makeTable.bind(this);
+  }
+  
+  //helps with call to fcc api, such that it doesn't render table without getting the api result
+  componentDidMount(){
+    this.getRecentPoint();  
+  }
+  
+  //api call to get recent month point
+  getRecentPoint(){
+    return $.ajax({
+      url:'https://fcctop100.herokuapp.com/api/fccusers/top/recent',
+      success:(function(result){
+        this.setState({pointsArr:result});
+      }.bind(this))
+    });
+  }
+  
+  //api call to get all time points
+  getAllPoints(){
+    return $.ajax({
+      url:'https://fcctop100.herokuapp.com/api/fccusers/top/alltime',
+      success:(function(result){
+        this.setState({pointsArr:result});
+      }.bind(this))
+    });
+  }
+  
+  //assemble each row for the the table using Panel component
+  makeTable(eachPerson,i){
+    return(
+        <Panels 
+          key={i}
+          index={i}
+          userName={eachPerson['username']} 
+          recentPoint={eachPerson['recent']} 
+          allPoint={eachPerson['alltime']}
+          picture={eachPerson['img']}
+        >
+        </Panels>
+    );
+  }
+  
+  render(){
+    return(
+      <div className='completeTable'>
+        <div className='leaderBoardTitle'>Leaderboard</div>
+        <table className='userTable'>
+          <TableTitle getAllTimePoints={this.getAllPoints} getRecPoints={this.getRecentPoint}></TableTitle>
+          {this.state.pointsArr.map(this.makeTable)}
+        </table>
+      </div>
+    )
+  }
+}
+
+//component for footer
+function getFooter(){
+  return (
+    <div className='footer'>Made By BXR</div>
+  )
+}
+
+//final assembling of different components
+class App extends React.Component{
+  constructor(){
+    super();
+  }
+  render(){
+    var holdHeader = getHeader();
+    var holdFooter = getFooter();
+    return(
+      <div>
+        {holdHeader}
+        <Table/>
+        {holdFooter}
+      </div>
+    )
+  }
+}
+
+//final render
+ReactDOM.render(
+  <App/>, document.getElementById('root')
+)

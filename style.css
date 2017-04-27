@@ -1,0 +1,79 @@
+body{
+  margin:0;
+  padding:0;
+  background-color:rgb(147,147,147);
+}
+
+.headBar{
+  background-color:rgb(0,100,0);
+  color:white;
+  font-size:2em;
+  font-family:sans-serif;
+  padding-top:5px;
+  padding-left:5px;
+  padding-bottom:5px;
+  margin-bottom:40px;
+}
+
+.completeTable{
+  width:80%;
+  margin:auto;
+}
+
+.userTable{
+  width:100%;
+  margin:auto;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid gray;
+  text-align: left;
+  padding: 8px;
+  font-size:20px;
+  font-family:Arial;
+  background-color:white;
+}
+
+.leaderBoardTitle{
+  background-color:rgb(0,100,0);
+  color:white;
+  font-size:1.8em;
+  font-family:sans-serif;
+  text-align:center;
+  padding-top:4px;
+  padding-bottom:4px;
+  border-top-left-radius:5px;
+  border-top-right-radius:5px;
+  border-right:none;
+  min-width:400px;
+}
+
+.pointsTitle{
+  text-align:center;
+  color:rgb(0,100,0);
+  text-decoration: underline;
+}
+
+.points{
+  text-align:center;
+}
+
+.imageStyle{
+  width:38px;
+  height:38px;
+  border:2px solid green;
+  border-radius:5px;
+  margin-right:7px;
+}
+
+.footer{
+  background-color:rgb(0,100,0);
+  color:white;
+  font-size:2em;
+  font-family:sans-serif;
+  padding-top:5px;
+  padding-bottom:5px;
+  text-align:center;
+  margin-top:40px;
+}
